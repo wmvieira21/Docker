@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  mongodb:
+    container_name: mongodb
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    # environment:
+    #   - MONGO_INITBD_ROOT_USERNAME=wmvieira
+    #   - MONGO_INITBD_ROOT_PASSWORK=123
+    # networks:
+    #   - app-net
+    # env_file:
+    #   - ./env/mongo.env
+  backend:
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    #   args:
+    build: ./backend
+    ports:
+      - '80:80'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    # env_file:
+    #   - ./env/backend.env
+    depends_on:
+      - mongodb
+  
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend/src:/app/src
+    ports:
+      - '3000:3000'
+    tty: true
+    stdin_open: true
+    depends_on:
+      - backend
+
+volumes:
+  data:
+  logs:

@@ -1,0 +1,20 @@
+docker network create app-net
+
+Mongo
+with auth
+docker run --rm --name mongo-container --network app-net -v data:/data/db -e MONGO_INITBD_ROOT_USERNAME=wmvieira -e MONGO_INITBD_ROOT_PASSWORK=123 mongo
+no auth
+docker run --rm --name mongo-container --network app-net -v data:/data/db mongo
+
+Frontend
+docker run --rm -it --name react-container --network app-net -p 3000:3000 -v "C:\Users\William\Desktop\Git\Docker\multi-01-starting-setup\frontend:/app" -v /app/node_modules react-image
+
+Backend
+docker run -p 80:80 --rm --network app-net --name node-container -v "C:\Users\William\Desktop\Git\Docker\multi-01-starting-setup\backend:/app" -v /app/node_modules -v log-volume:/app/logs -e MONGO_USERNAME=wmvieira backend-image
+
+
+node app
+'mongodb://wmvieira:123@mongo-container:27017/course-goals?authSource=admin',
+
+user and password
+william:secret
